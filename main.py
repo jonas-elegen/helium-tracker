@@ -51,11 +51,11 @@ def fetch_airgas_data():
             page.goto("https://www.airgas.com/login", timeout=60000)
             
             print("-> Typing credentials...")
-            page.fill("input[name='j_username']", username)
-            page.fill("input[name='j_password']", password)
+            page.fill("input[name='j_username']:visible", username)
+            page.fill("input[name='j_password']:visible", password)
             
             print("-> Submitting login form...")
-            page.click("button[type='submit']")
+            page.click("button[type='submit']:visible")  # Use the :visible one here
             page.wait_for_load_state("networkidle")
             
             print("-> Accessing sensor details API...")
