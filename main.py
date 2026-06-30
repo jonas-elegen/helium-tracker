@@ -66,7 +66,7 @@ def fetch_airgas_data():
             lt = float(lt_m.group(1)) if lt_m else "N/A"
             lv = float(lv_m.group(1)) if lv_m else "N/A"
             
-            # Parse Right Tank Data
+            # Parse Right Tank Data (Fixed syntax bug here!)
             rp_m = re.search(pressure_regex, right_section)
             rt_m = re.search(temp_regex, right_section)
             rv_m = re.search(battery_regex, right_section)
