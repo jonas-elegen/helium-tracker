@@ -55,8 +55,11 @@ def fetch_airgas_data():
             page.fill("input[name='j_password']:visible", password)
             
             print("-> Submitting login form...")
-            page.click("button[type='submit']:visible")  # Use the :visible one here
-            page.wait_for_load_state("networkidle")
+            page.click("button[type='submit']:visible")
+            
+            # Wait for the initial page load instead of waiting for endless background tracking
+            page.wait_for_load_state("load")
+            page.wait_for_timeout(3000)
             
             print("-> Accessing sensor details API...")
             api_url = "https://www.airgas.com/ezgaz/getSensorDetails?hwid=00:17:0D:00:00:75:9C:81,00:17:0D:00:00:75:9C:6F"
