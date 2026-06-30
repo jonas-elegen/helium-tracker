@@ -1,0 +1,31 @@
+name: Run Helium Tank Tracker
+
+on:
+  schedule:
+    # Runs automatically every single day at 15:00 UTC (8:00 AM PST)
+    - cron: '0 15 * * *'
+  workflow_dispatch: # Gives you a manual override button to click anytime
+
+jobs:
+  scrape-and-log:
+    runs-on: ubuntu-latest
+    steps:
+    - name: Checkout Repository Code
+      uses: actions/checkout@v4
+    
+    - name: Set up Python Environment
+      uses: actions/setup-python@v5
+      with:
+        python-version: '3.11'
+        
+    - name: Install Libraries & Browser Engine
+      run: |
+        pip install playwright gspread oauth2client
+        playwright install chromium
+        
+    - name: Execute Tank Automation Script
+      env:
+        AIRGAS_USER: ${{ secrets.AIRGAS_USER }}
+        AIRGAS_PASS: ${{ secrets.AIRGAS_PASS }}
+        GOOGLE_CREDS: ${{ secrets.GOOGLE_CREDS }}
+      run: python main.py
