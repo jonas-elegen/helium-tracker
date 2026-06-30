@@ -57,16 +57,26 @@ def fetch_airgas_data():
             print("-> Submitting login form...")
             page.click("button[type='submit']:visible")
             
-            # Wait for the initial page load instead of waiting for endless background tracking
+            # Give the server 7 seconds to authenticate and hand over session cookies
             page.wait_for_load_state("load")
-            page.wait_for_timeout(3000)
+            page.wait_for_timeout(7000) 
             
             print("-> Accessing sensor details API...")
             api_url = "https://www.airgas.com/ezgaz/getSensorDetails?hwid=00:17:0D:00:00:75:9C:81,00:17:0D:00:00:75:9C:6F"
             page.goto(api_url, timeout=60000)
             
             raw_text = page.locator("body").inner_text()
-            json_data = json.loads(raw_text)
+            
+            # Diagnostic Check: Try to parse the text. If it fails, print what's actually there!
+            try:
+                json_data = json.loads(raw_text)
+            except json.JSONDecodeError:
+                print("[X] ERROR: Airgas did not return a data stream. The page actually contains:")
+                print("-" * 50)
+                print(raw_text[:600]) # Prints the first 600 characters of the page layout
+                print("-" * 50)
+                browser.close()
+                sys.exit(1)
             
             if json_data.get("status") == "SUCCESS" and "content" in json_data:
                 print("[✓] Successfully retrieved tank data from Airgas!")
@@ -95,11 +105,9 @@ def fetch_airgas_data():
                 rv = float(rv_m.group(1)) if rv_m else "N/A"
                 
                 browser.close()
-                
-                # Pass data to the sheet logging function
                 log_to_sheets(lp, rp, lt, rt, lv, rv)
             else:
-                print("[X] ERROR: Airgas API did not return valid data. Check if your login was blocked by a security prompt.")
+                print("[X] ERROR: Airgas API returned status failure.")
                 browser.close()
                 sys.exit(1)
                 
