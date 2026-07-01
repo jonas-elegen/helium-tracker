@@ -2,8 +2,7 @@ name: Run Helium Tank Tracker
 
 on:
   schedule:
-    # Runs automatically every single day at 15:00 UTC (8:00 AM PST)
-    - cron: '0 15 * * *'
+    - cron: '* * * * *'
   workflow_dispatch: # Gives you a manual override button to click anytime
 
 jobs:
