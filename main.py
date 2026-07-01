@@ -7,6 +7,8 @@ import sys
 from playwright.sync_api import sync_playwright
 import gspread
 from oauth2client.service_account import ServiceAccountCredentials
+from datetime import datetime
+from zoneinfo import ZoneInfo
 
 def log_to_sheets(left_p, right_p, left_t, right_t, left_v, right_v):
     try:
@@ -22,7 +24,8 @@ def log_to_sheets(left_p, right_p, left_t, right_t, left_v, right_v):
         print(f"-> Attempting to open sheet named: '{sheet_name}'...")
         sheet = client.open(sheet_name).sheet1
         
-        timestamp = time.strftime("%Y-%m-%d %H:%M:%S")
+        # Generates the exact current time in California (handles PST/PDT automatically)
+        timestamp = datetime.now(ZoneInfo("America/Los_Angeles")).strftime("%Y-%m-%d %H:%M:%S")
         sheet.append_row([timestamp, left_p, right_p, left_t, right_t, left_v, right_v])
         print("[✓] Google Sheet updated successfully!")
     except gspread.exceptions.SpreadsheetNotFound:
