@@ -2,7 +2,7 @@ name: Run Helium Tank Tracker
 
 on:
   schedule:
-    - cron: '* * * * *'
+    - cron: '0 * * * *'
   workflow_dispatch: # Gives you a manual override button to click anytime
 
 jobs:
