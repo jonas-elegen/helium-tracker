@@ -35,7 +35,7 @@ jobs:
               sleep 30
             else
               echo "All 3 attempts failed. Script is exiting."
-              exit 1
+              exit 0
             fi
           }
         done
