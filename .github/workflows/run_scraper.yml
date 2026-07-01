@@ -1,9 +1,7 @@
 name: Run Helium Tank Tracker
 
 on:
-  schedule:
-    - cron: '23 * * * *'
-  workflow_dispatch: # Gives you a manual override button to click anytime
+  workflow_dispatch: # Allows Google Sheets and your manual clicks to run the script
 
 jobs:
   scrape-and-log:
