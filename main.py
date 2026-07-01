@@ -54,12 +54,15 @@ def fetch_airgas_data():
             page.fill("input[name='j_username']:visible", username)
             page.fill("input[name='j_password']:visible", password)
             
-            print("-> Submitting login form...")
-            page.click("button[type='submit']:visible")
+            print("-> Submitting login form via Enter key...")
+            page.focus("input[name='j_password']:visible")
+            page.keyboard.press("Enter")
             
-            # Give the server 7 seconds to authenticate and hand over session cookies
+            # Give the server 7 seconds to process the authentication handshake
             page.wait_for_load_state("load")
             page.wait_for_timeout(7000) 
+            
+            print(f"-> Landing page URL after login attempt: {page.url}")
             
             print("-> Accessing sensor details API...")
             api_url = "https://www.airgas.com/ezgaz/getSensorDetails?hwid=00:17:0D:00:00:75:9C:81,00:17:0D:00:00:75:9C:6F"
@@ -67,13 +70,12 @@ def fetch_airgas_data():
             
             raw_text = page.locator("body").inner_text()
             
-            # Diagnostic Check: Try to parse the text. If it fails, print what's actually there!
             try:
                 json_data = json.loads(raw_text)
             except json.JSONDecodeError:
                 print("[X] ERROR: Airgas did not return a data stream. The page actually contains:")
                 print("-" * 50)
-                print(raw_text[:600]) # Prints the first 600 characters of the page layout
+                print(raw_text[:600]) 
                 print("-" * 50)
                 browser.close()
                 sys.exit(1)
