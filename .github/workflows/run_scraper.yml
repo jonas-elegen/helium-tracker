@@ -1,7 +1,7 @@
 name: Run Helium Tank Tracker
 
 on:
-  workflow_dispatch: # Allows Google Sheets and your manual clicks to run the script
+  workflow_dispatch:
 
 jobs:
   scrape-and-log:
@@ -25,7 +25,6 @@ jobs:
         AIRGAS_USER: ${{ secrets.AIRGAS_USER }}
         AIRGAS_PASS: ${{ secrets.AIRGAS_PASS }}
         GOOGLE_CREDS: ${{ secrets.GOOGLE_CREDS }}
-      # This loop will automatically retry the script up to 3 times if it crashes
       run: |
         for i in {1..3}; do
           echo "Attempt $i of 3..."
