@@ -17,10 +17,12 @@ def log_to_sheets(left_p, right_p, left_t, right_t, left_v, right_v):
         creds_json = json.loads(os.environ.get("GOOGLE_CREDS"))
         creds = ServiceAccountCredentials.from_json_keyfile_dict(creds_json, scope)
         client = gspread.authorize(creds)
+
+        # Open the spreadsheet explicitly by its URL
+        sheet_url = "https://docs.google.com/spreadsheets/d/1WYu-FaKPzclG0Vbvu3--OFjJ69BVV5EH_erQrogY8Fs/edit?gid=58300803#gid=58300803"
         
-        # ⚠️ MAKE SURE THIS MATCHES YOUR SHEET NAME EXACTLY
-        sheet_name = "Helium Consumption Tracking"
-        
+        print("-> Attempting to open sheet by URL...")
+        sheet = client.open_by_url(sheet_url).sheet1
         print(f"-> Attempting to open sheet named: '{sheet_name}'...")
         sheet = client.open(sheet_name).sheet1
         
