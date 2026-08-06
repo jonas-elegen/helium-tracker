@@ -30,8 +30,8 @@ def log_to_sheets(left_p, right_p, left_t, right_t, left_v, right_v):
         timestamp = datetime.now(ZoneInfo("America/Los_Angeles")).strftime("%Y-%m-%d %H:%M:%S")
         sheet.append_row([timestamp, left_p, right_p, left_t, right_t, left_v, right_v])
         print("[✓] Google Sheet updated successfully!")
-    except gspread.exceptions.SpreadsheetNotFound:
-        print(f"[X] ERROR: Could not find a Google Sheet named '{sheet_name}'. Check your spelling and spacing!")
+   except gspread.exceptions.SpreadsheetNotFound:
+        print("[X] ERROR: Could not find the Google Sheet. Check that the URL is correct and the service account has Editor access!")
         sys.exit(1)
     except Exception as e:
         print(f"[X] ERROR writing to Google Sheets: {str(e)}")
